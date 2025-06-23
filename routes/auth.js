@@ -6,7 +6,7 @@ const User = require('../models/User');
 
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'maha-pranalika-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
 router.post('/signup', async (req, res) => {
     console.log('Incoming body:', req.body);
     try {
