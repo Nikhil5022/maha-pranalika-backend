@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
+require('dotenv').config();
+
 const connectDB = async () => {
   console.log('Connecting to MongoDB Atlas...');
+  console.log("MONGO_URI:", process.env.MONGO_URI);
+
   try {
-    await mongoose.connect('mongodb+srv://gsnagc5022:TwkzWXNov3tGLzPp@cluster0.hc0mzf2.mongodb.net/users', {
+    await mongoose.connect('mongodb+srv://gsainikhil95:mbXc4bJXyIPsoJVt@cluster0.cai8yp6.mongodb.net/users', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

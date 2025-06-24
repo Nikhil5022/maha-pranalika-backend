@@ -6,7 +6,7 @@ const User = require('../models/User');
 
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "your_jwt_secret_key";
 router.post('/signup', async (req, res) => {
     console.log('Incoming body:', req.body);
     try {
