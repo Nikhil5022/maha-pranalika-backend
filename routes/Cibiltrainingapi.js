@@ -2,7 +2,7 @@ const express = require('express');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const CibilTraining = require('../models/CibilTraining');
-
+const user=require('../models/User');
 const router = express.Router();
 
 const razorpay = new Razorpay({
@@ -14,7 +14,8 @@ const razorpay = new Razorpay({
 router.post('/register', async (req, res) => {
   try {
     const formData = req.body;
-
+    console.log(formData);
+    const userId=formData.userId;
     const order = await razorpay.orders.create({
       amount: 499900, 
       currency: 'INR',
@@ -36,7 +37,17 @@ router.post('/register', async (req, res) => {
 
 
     await newEntry.save();
-
+    console.log(newEntry._id);
+   if(userId){
+    const foundUser = await user.findById(userId);
+    if (foundUser) {
+        foundUser.cibil_training.push(newEntry._id);
+        await foundUser.save();
+    } else {
+        return res.status(404).json({ message: 'User not found' });
+    }
+   
+  }
     res.status(200).json({ orderId: order.id, key: razorpay.key_id, message: 'Order created successfully', entryId: newEntry._id });
   } catch (err) {
     console.error('Order creation error:', err);
