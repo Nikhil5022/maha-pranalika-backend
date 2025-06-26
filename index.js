@@ -19,9 +19,20 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+const firmRoutes = require('./routes/Firmapi');
+app.use('/api/firm', firmRoutes);
+
+const cibilRoutes = require('./routes/Cibiltrainingapi');
+app.use('/api/cibil', cibilRoutes);
+
+
+
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
 });
+
+
+
 
 app.listen(PORT, () => {
   console.log(` Server running on port ${PORT}`);
