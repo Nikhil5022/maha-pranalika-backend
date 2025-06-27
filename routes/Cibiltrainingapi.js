@@ -16,6 +16,7 @@ router.post('/register', async (req, res) => {
     const formData = req.body;
     console.log(formData);
     const userId=formData.userId;
+    console.log("user:",userId);
     const order = await razorpay.orders.create({
       amount: 499900, 
       currency: 'INR',

@@ -25,14 +25,12 @@ app.use('/api/firm', firmRoutes);
 const cibilRoutes = require('./routes/Cibiltrainingapi');
 app.use('/api/cibil', cibilRoutes);
 
-
+const cibilRepairRoutes = require('./routes/Cibilrepairapi');
+app.use('/api/cibil-repair',cibilRepairRoutes);
 
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
 });
-
-
-
 
 app.listen(PORT, () => {
   console.log(` Server running on port ${PORT}`);
