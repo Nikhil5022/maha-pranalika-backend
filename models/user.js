@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   }],
   cibil_score_restoration: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CibilScoreRestoration'
+    ref: 'CibilRepair'
   }],
   cibil_training: [{
     type: mongoose.Schema.Types.ObjectId,
