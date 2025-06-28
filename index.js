@@ -28,6 +28,9 @@ app.use('/api/cibil', cibilRoutes);
 const cibilRepairRoutes = require('./routes/Cibilrepairapi');
 app.use('/api/cibil-repair',cibilRepairRoutes);
 
+const userRoutes = require('./routes/Users');
+app.use('/api/user', userRoutes);
+
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
 });
