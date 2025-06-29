@@ -87,5 +87,18 @@ router.post(
     }
 );
 
+router.post('/getFirms', async (req, res) => {
+    try {
+        const firms = await Firm.find({});
+        if (firms.length === 0) {
+            return res.status(404).json({ message: "No firms found" });
+        }
+        res.status(200).json(firms);
+    } catch (error) {
+        console.error("Error fetching firms:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 
 module.exports = router;
