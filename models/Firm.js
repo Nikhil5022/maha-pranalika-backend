@@ -45,7 +45,24 @@ const firmSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  payment: {
+        orderId: String,
+        paymentId: String,
+        signature: String,
+        status: {
+            type: String,
+            enum: ['pending', 'paid', 'failed'],
+            default: 'pending'
+        },
+        amount: Number,
+        currency: String
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = mongoose.model('Firm', firmSchema);
