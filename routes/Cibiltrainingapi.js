@@ -75,7 +75,7 @@ router.post('/verify-payment', async (req, res) => {
       entry.payment.paymentId = paymentId;
       entry.payment.signature = signature;
       await entry.save();
-    }
+    } 
 
     if (isValid) {
       return res.status(200).json({ success: true });
