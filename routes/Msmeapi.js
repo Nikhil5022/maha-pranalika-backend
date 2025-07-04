@@ -6,7 +6,7 @@ require('dotenv').config();
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Msme = require('../models/Msme');
-const User = require('../models/User');
+const User = require('../models/user');
 const multer = require("multer");
 const upload = multer();
 
