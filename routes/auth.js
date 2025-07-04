@@ -2,11 +2,12 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+require('dotenv').config();
 
 
 const router = express.Router();
 
-const JWT_SECRET = "your_jwt_secret_key";
+const JWT_SECRET = process.env.JWTSECRET;
 router.post('/signup', async (req, res) => {
     console.log('Incoming body:', req.body);
     try {
