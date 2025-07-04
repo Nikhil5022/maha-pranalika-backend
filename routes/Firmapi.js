@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const storage = require('../cloudinaryStorage');
 const upload = multer({ storage });
-const user = require('../models/User');
+const user = require('../models/user');
 require('dotenv').config();
 
 const Firm = require('../models/Firm');

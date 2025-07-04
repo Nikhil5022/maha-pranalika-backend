@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const storage = require('../cloudinaryStorage');
 const upload = multer({ storage });
-const user = require('../models/User');
+const user = require('../models/user');
 const CibilReapir = require('../models/CibilRepair')
 
 router.post('/register-cibil', upload.fields([
