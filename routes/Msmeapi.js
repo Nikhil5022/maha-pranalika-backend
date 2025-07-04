@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const storage = require('../cloudinaryStorage');
+require('dotenv').config();
 
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
@@ -11,8 +12,8 @@ const upload = multer();
 
 
 const razorpay = new Razorpay({
-    key_id: "rzp_test_T8S88fJw8tHj6S",
-    key_secret: "3rPRapQmi94l6ETUJhGSQ9Ew"
+    key_id: process.env.RAZORPAYKEY_ID,
+    key_secret: process.env.RAZORPAYKEY_SECRET
 });
 
 router.post('/register-msme', upload.none(), async (req, res) => {
@@ -86,7 +87,7 @@ router.post('/verify-payment', async (req, res) => {
     const { orderId, paymentId, signature } = req.body;
     const body = orderId + "|" + paymentId;
     const expectedSignature = crypto
-        .createHmac("sha256", "3rPRapQmi94l6ETUJhGSQ9Ew")
+        .createHmac("sha256", process.env.RAZORPAYKEY_SECRET)
         .update(body)
         .digest("hex");
 
