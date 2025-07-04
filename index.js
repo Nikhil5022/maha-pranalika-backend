@@ -1,45 +1,31 @@
 const express = require('express');
 const cors = require('cors');
-
-const app = express();
-const PORT =  5000;
+const serverless = require('serverless-http');
 const connectDB = require('./db');
 
+const app = express();
 connectDB();
 
+// Middleware
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
-
-const firmRoutes = require('./routes/Firmapi');
-app.use('/api/firm', firmRoutes);
-
-const cibilRoutes = require('./routes/Cibiltrainingapi');
-app.use('/api/cibil', cibilRoutes);
-
-const cibilRepairRoutes = require('./routes/Cibilrepairapi');
-app.use('/api/cibil-repair',cibilRepairRoutes);
-
-const userRoutes = require('./routes/Users');
-app.use('/api/user', userRoutes);
-
-const msmeRoutes=require('./routes/Msmeapi');
-app.use('/api/msme',msmeRoutes);
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/firm', require('./routes/Firmapi'));
+app.use('/api/cibil', require('./routes/Cibiltrainingapi'));
+app.use('/api/cibil-repair', require('./routes/Cibilrepairapi'));
+app.use('/api/user', require('./routes/Users'));
+app.use('/api/msme', require('./routes/Msmeapi'));
 
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
 });
 
-app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
-});
-
-module.exports = app;
+// ✅ Export handler for Vercel
+module.exports = serverless(app);
