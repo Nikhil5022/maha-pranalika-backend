@@ -19,6 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+const emailRoutes = require('./routes/emailapi');
+app.use('/api/email', emailRoutes);
+
 const firmRoutes = require('./routes/Firmapi');
 app.use('/api/firm', firmRoutes);
 
