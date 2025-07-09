@@ -24,13 +24,17 @@ app.use('/api/email', emailRoutes);
 
 const firmRoutes = require('./routes/Firmapi');
 app.use('/api/firm', firmRoutes);
+console.log("Routes:", firmRoutes);
 
 const cibilRoutes = require('./routes/Cibiltrainingapi');
 app.use('/api/cibil', cibilRoutes);
 
 const cibilRepairRoutes = require('./routes/Cibilrepairapi');
 app.use('/api/cibil-repair',cibilRepairRoutes);
+const visaRoutes = require('./routes/Visaapi');
+console.log("visaRoutes:", visaRoutes);
 
+app.use('/api/visa',visaRoutes);
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
 });

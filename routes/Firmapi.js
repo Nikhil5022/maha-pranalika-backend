@@ -3,9 +3,17 @@ const router = express.Router();
 const multer = require('multer');
 const storage = require('../cloudinaryStorage');
 const upload = multer({ storage });
-const user = require('../models/User');
+const user = require('../models/user');
+require('dotenv').config();
 
 const Firm = require('../models/Firm');
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAYKEY_ID,
+    key_secret: process.env.RAZORPAYKEY_SECRET
+});
 
 router.post(
     '/register-firm',
@@ -46,6 +54,12 @@ router.post(
                 }
             };
 
+            const order = await razorpay.orders.create({
+                amount: 1000000,
+                currency: 'INR',
+                receipt: 'rcpt_' + Date.now()
+            });
+
             const firm = new Firm({
                 basic_details: parseIfString(body.basic_details),
                 firm_details: parseIfString(body.firm_details),
@@ -63,6 +77,12 @@ router.post(
                     name: body['declaration.name'] || '',
                     date: body['declaration.date'] || '',
                     declared: body['declaration.declared'] === 'true'
+                },
+                payment: {
+                    orderId: order.id,
+                    amount: order.amount,
+                    currency: order.currency,
+                    status: 'pending'
                 }
             });
 
@@ -79,13 +99,57 @@ router.post(
                 }
             }
 
-            res.status(201).json({ message: 'Firm registered successfully', firm });
+            res.status(200).json({ orderId: order.id, key: razorpay.key_id, message: 'Order created successfully' });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Error saving firm data' });
         }
     }
 );
+
+router.post('/getFirms', async (req, res) => {
+    try {
+        const firms = await Firm.find({});
+        if (firms.length === 0) {
+            return res.status(404).json({ message: "No firms found" });
+        }
+        res.status(200).json(firms);
+    } catch (error) {
+        console.error("Error fetching firms:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
+router.post('/verify-payment', async (req, res) => {
+    const { orderId, paymentId, signature } = req.body;
+    const body = orderId + "|" + paymentId;
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAYKEY_SECRET)
+        .update(body)
+        .digest("hex");
+
+    const isValid = expectedSignature === signature;
+    try {
+        const entry = await Firm.findOne({ 'payment.orderId': orderId });
+
+        if (entry) {
+            entry.payment.status = isValid ? 'paid' : 'failed';
+            entry.payment.paymentId = paymentId;
+            entry.payment.signature = signature;
+            await entry.save();
+        }
+        if (isValid) {
+            return res.status(200).json({ success: true });
+        } else {
+            return res.status(400).json({ success: false, message: 'Signature mismatch' });
+        }
+    }
+    catch (err) {
+        console.error('Payment verification error:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+})
 
 
 module.exports = router;

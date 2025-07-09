@@ -2,12 +2,17 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/user');
+require('dotenv').config();
 
 
 const router = express.Router();
+
 const {sendVerificationEmail,sendForgotPasswordEmail} =require('./sendEmail');
 const JWT_SECRET = "your_jwt_secret_key";
+
+
+// const JWT_SECRET = process.env.JWTSECRET;
 router.post('/signup', async (req, res) => {
     console.log('Incoming body:', req.hostname);
     try {

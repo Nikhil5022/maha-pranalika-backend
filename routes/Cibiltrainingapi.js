@@ -2,7 +2,7 @@ const express = require('express');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const CibilTraining = require('../models/CibilTraining');
-const user=require('../models/User');
+const user=require('../models/user');
 const router = express.Router();
 
 const razorpay = new Razorpay({
@@ -75,7 +75,7 @@ router.post('/verify-payment', async (req, res) => {
       entry.payment.paymentId = paymentId;
       entry.payment.signature = signature;
       await entry.save();
-    }
+    } 
 
     if (isValid) {
       return res.status(200).json({ success: true });
