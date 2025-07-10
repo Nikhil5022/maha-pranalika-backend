@@ -21,7 +21,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-
+  verified: { 
+    type: Boolean, 
+    default: false 
+  },
+  
   firm_registration: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Firm'  // ✅ fixed
