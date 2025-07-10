@@ -18,4 +18,26 @@ router.get('/getUsers', async (req, res) => {
     }
 });
 
+router.get('/getUserById/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const foundUser = await user.findById(userId)
+      .populate("firm_registration")
+      .populate("cibil_score_restoration")
+      .populate("cibil_training")
+      .populate("msme");
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(foundUser);
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 module.exports = router;

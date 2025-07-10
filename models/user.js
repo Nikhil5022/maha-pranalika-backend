@@ -28,23 +28,23 @@ const userSchema = new mongoose.Schema({
   
   firm_registration: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'FirmRegistration'
+    ref: 'Firm'  // ✅ fixed
   }],
   cibil_score_restoration: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CibilRepair'
+    ref: 'CibilRepair'  // ✅ fixed
   }],
   cibil_training: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CibilTraining'
+    ref: 'CibilTraining'  // ✅ fixed
   }],
   visa_assistance: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VisaAssistance'
+    ref: 'VisaAssistance'  // ❗ Make sure to create and register this model correctly
   }],
   msme: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'MSME'
+    ref: 'MSMECluster'  // ✅ fixed
   }],
 
   role: {

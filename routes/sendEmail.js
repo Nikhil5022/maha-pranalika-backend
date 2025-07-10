@@ -1,8 +1,8 @@
-const nodemailer=require("nodemailer");
+const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
-    secure: true, 
+    secure: true,
     auth: {
         user: 'mvishleshana2002@gmail.com',
         pass: 'xmkvvvxqsukhvbvw'
@@ -18,36 +18,36 @@ const transporter = nodemailer.createTransport({
     }
 });*/
 module.exports = {
-sendVerificationEmail: async (senderAddress, link)=>{
-    let error=false;
-try {
- await transporter.sendMail({
-    from: '"mahapranalika" mvishleshana2002@gmail.com',
-    to: senderAddress,
-   subject:"verify email",
-    html: `Please verify your email by clicking <a href=${link}> here </a> <br/>
+    sendVerificationEmail: async (senderAddress, link) => {
+        let error = false;
+        try {
+            await transporter.sendMail({
+                from: '"mahapranalika" mvishleshana2002@gmail.com',
+                to: senderAddress,
+                subject: "verify email",
+                html: `Please verify your email by clicking <a href=${link}> here </a> <br/>
     This token is only valid for 7 days`
-});
-}
-catch(e) {
-error = true;
-}
-return error;
-},
-sendForgotPasswordEmail: async (senderAddress, link)=>{
-    let error=false;
-try {
- await transporter.sendMail({
-    from: '"mahapranalika" mvishleshana2002@gmail.com',
-    to: senderAddress,
-   subject:"Reset Password",
-    html: `Please Reset your password by clicking <a href=${link}> here </a> <br/>
+            });
+        }
+        catch (e) {
+            error = true;
+        }
+        return error;
+    },
+    sendForgotPasswordEmail: async (senderAddress, link) => {
+        let error = false;
+        try {
+            await transporter.sendMail({
+                from: '"mahapranalika" mvishleshana2002@gmail.com',
+                to: senderAddress,
+                subject: "Reset Password",
+                html: `Please Reset your password by clicking <a href=${link}> here </a> <br/>
     This link is only valid for 7 days`
-});
-}
-catch(e) {
-error = true;
-}
-return error;
-}
+            });
+        }
+        catch (e) {
+            error = true;
+        }
+        return error;
+    }
 }
