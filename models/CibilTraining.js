@@ -10,20 +10,6 @@ const cibilTrainingSchema = new mongoose.Schema({
     experience: { type: String, required: true },
     remarks: { type: String, required: true },
 
-    // Payment-related fields
-    payment: {
-        orderId: String,
-        paymentId: String,
-        signature: String,
-        status: {
-            type: String,
-            enum: ['pending', 'paid', 'failed'],
-            default: 'pending'
-        },
-        amount: Number,
-        currency: String
-    },
-
     createdAt: {
         type: Date,
         default: Date.now
