@@ -5,7 +5,6 @@ const storage = require("../cloudinaryStorage");
 const upload = multer({ storage });
 const user = require("../models/user");
 const Firm = require("../models/Firm");
-
 router.get('/getUsers', async (req, res) => {
     try {
         const users = await user.find({ role: "user" });

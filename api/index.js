@@ -21,7 +21,7 @@ app.use('/api/cibil', require('../routes/Cibiltrainingapi'));
 app.use('/api/cibil-repair', require('../routes/Cibilrepairapi'));
 app.use('/api/user', require('../routes/Users'));
 app.use('/api/msme', require('../routes/Msmeapi'));
-
+app.use('/api/visa', require('../routes/Visaapi'));
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
 });
