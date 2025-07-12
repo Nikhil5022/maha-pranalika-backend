@@ -62,7 +62,11 @@ const firmSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+     isResolved: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model('Firm', firmSchema);

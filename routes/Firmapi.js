@@ -151,5 +151,63 @@ router.post('/verify-payment', async (req, res) => {
     }
 })
 
+router.post('/resolveFirm', async (req, res) => {
+  const { userId, firmId } = req.body;
+  if (!userId || !firmId) return res.status(400).json({ message: "userId and firmId are required" });
+
+  try {
+    const firm = await Firm.findById(firmId);
+    if (!firm) return res.status(404).json({ message: "Firm not found" });
+
+    firm.isResolved = true;
+    await firm.save();
+
+    res.status(200).json({ message: "Firm marked as resolved" });
+  } catch (err) {
+    console.error("Resolve Firm Error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+router.post('/undoResolveFirm', async (req, res) => {
+  const { userId, firmId } = req.body;
+  if (!userId || !firmId) return res.status(400).json({ message: "userId and firmId are required" });
+
+  try {
+    const firm = await Firm.findById(firmId);
+    if (!firm) return res.status(404).json({ message: "Firm not found" });
+
+    firm.isResolved = false;
+    await firm.save();
+
+    res.status(200).json({ message: "Firm marked as unresolved" });
+  } catch (err) {
+    console.error("Undo Resolve Firm Error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+router.delete('/deleteFirm', async (req, res) => {
+  const { userId, firmId } = req.body;
+  if (!userId || !firmId) return res.status(400).json({ message: "userId and firmId are required" });
+
+  try {
+    const firm = await Firm.findByIdAndDelete(firmId);
+    if (!firm) return res.status(404).json({ message: "Firm not found" });
+
+    const foundUser = await user.findById(userId);
+    if (foundUser) {
+      foundUser.firm_registration = foundUser.firm_registration.filter(id => id.toString() !== firmId);
+      await foundUser.save();
+    }
+
+    res.status(200).json({ message: "Firm deleted successfully" });
+  } catch (err) {
+    console.error("Delete Firm Error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+
 
 module.exports = router;

@@ -54,6 +54,10 @@ const visaSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  isResolved: {
+    type: Boolean,
+    default: false
   }
 });
 

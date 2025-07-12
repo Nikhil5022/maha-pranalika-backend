@@ -70,8 +70,7 @@ router.post('/register-msme', upload.none(), async (req, res) => {
         if (userId) {
             const user = await User.findById(userId);
             if (user) {
-                user.msme_registration = user.msme_registration || [];
-                user.msme_registration.push(msme._id);
+                user.msme.push(msme._id);
                 await user.save();
             }
         }
@@ -112,5 +111,63 @@ router.post('/verify-payment', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+router.post('/resolveMsme', async (req, res) => {
+    const { userId, msmeId } = req.body;
+    if (!userId || !msmeId) return res.status(400).json({ message: "userId and msmeId are required" });
+
+    try {
+        const msme = await Msme.findById(msmeId);
+        if (!msme) return res.status(404).json({ message: "MSME form not found" });
+
+        msme.isResolved = true;
+        await msme.save();
+
+        res.status(200).json({ message: "MSME form marked as resolved" });
+    } catch (err) {
+        console.error("Resolve MSME Error:", err);
+        res.status(500).json({ error: "Server error", details: err.message });
+    }
+});
+
+router.post('/undoResolveMsme', async (req, res) => {
+    const { userId, msmeId } = req.body;
+    if (!userId || !msmeId) return res.status(400).json({ message: "userId and msmeId are required" });
+
+    try {
+        const msme = await Msme.findById(msmeId);
+        if (!msme) return res.status(404).json({ message: "MSME form not found" });
+
+        msme.isResolved = false;
+        await msme.save();
+
+        res.status(200).json({ message: "MSME form marked as unresolved" });
+    } catch (err) {
+        console.error("Undo Resolve MSME Error:", err);
+        res.status(500).json({ error: "Server error", details: err.message });
+    }
+});
+
+router.delete('/deleteMsme', async (req, res) => {
+    const { userId, msmeId } = req.body;
+    if (!userId || !msmeId) return res.status(400).json({ message: "userId and msmeId are required" });
+
+    try {
+        const msme = await Msme.findByIdAndDelete(msmeId);
+        if (!msme) return res.status(404).json({ message: "MSME form not found" });
+
+        const user = await User.findById(userId);
+        if (user) {
+            user.msme = user.msme.filter(id => id.toString() !== msmeId);
+            await user.save();
+        }
+
+        res.status(200).json({ message: "MSME form deleted successfully" });
+    } catch (err) {
+        console.error("Delete MSME Error:", err);
+        res.status(500).json({ error: "Server error", details: err.message });
+    }
+});
+
 
 module.exports = router;
