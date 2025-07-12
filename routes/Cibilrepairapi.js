@@ -74,4 +74,62 @@ router.post('/register-cibil', upload.fields([
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 });
+
+router.post('/resolveCibilRepair', async (req, res) => {
+  const { userId, repairId } = req.body;
+  if (!userId || !repairId) return res.status(400).json({ message: "userId and repairId are required" });
+
+  try {
+    const entry = await CibilReapir.findById(repairId);
+    if (!entry) return res.status(404).json({ message: "CIBIL Repair entry not found" });
+
+    entry.isResolved = true;
+    await entry.save();
+
+    res.status(200).json({ message: "CIBIL Repair marked as resolved" });
+  } catch (err) {
+    console.error("Resolve CIBIL Repair Error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+router.post('/undoResolveCibilRepair', async (req, res) => {
+  const { userId, repairId } = req.body;
+  if (!userId || !repairId) return res.status(400).json({ message: "userId and repairId are required" });
+
+  try {
+    const entry = await CibilReapir.findById(repairId);
+    if (!entry) return res.status(404).json({ message: "CIBIL Repair entry not found" });
+
+    entry.isResolved = false;
+    await entry.save();
+
+    res.status(200).json({ message: "CIBIL Repair marked as unresolved" });
+  } catch (err) {
+    console.error("Undo Resolve CIBIL Repair Error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+router.delete('/deleteCibilRepair', async (req, res) => {
+  const { userId, repairId } = req.body;
+  if (!userId || !repairId) return res.status(400).json({ message: "userId and repairId are required" });
+
+  try {
+    const deletedEntry = await CibilReapir.findByIdAndDelete(repairId);
+    if (!deletedEntry) return res.status(404).json({ message: "CIBIL Repair entry not found" });
+
+    const foundUser = await user.findById(userId);
+    if (foundUser) {
+      foundUser.cibil_score_restoration = foundUser.cibil_score_restoration.filter(id => id.toString() !== repairId);
+      await foundUser.save();
+    }
+
+    res.status(200).json({ message: "CIBIL Repair entry deleted successfully" });
+  } catch (err) {
+    console.error("Delete CIBIL Repair Error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
 module.exports = router
