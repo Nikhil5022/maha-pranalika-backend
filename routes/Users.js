@@ -26,7 +26,8 @@ router.get('/getUserById/:id', async (req, res) => {
       .populate("firm_registration")
       .populate("cibil_score_restoration")
       .populate("cibil_training")
-      .populate("msme");
+      .populate("msme")
+      .populate("visa_applications")
 
     if (!foundUser) {
       return res.status(404).json({ message: "User not found" });

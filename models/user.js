@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  verified: { 
-    type: Boolean, 
-    default: false 
+  verified: {
+    type: Boolean,
+    default: false
   },
-  
+
   firm_registration: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Firm'  // ✅ fixed
@@ -38,10 +38,11 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CibilTraining'  // ✅ fixed
   }],
-  visa_assistance: [{
+  visa_applications: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VisaAssistance'  // ❗ Make sure to create and register this model correctly
-  }],
+    ref: 'VisaApplication'
+  }]
+  ,
   msme: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MSMECluster'  // ✅ fixed
