@@ -7,7 +7,7 @@ connectDB();
 const port=5000;
 
 // Middleware
-const allowedOrigins = ['http://localhost:5000', 'https://swayamkrush.com'];
+const allowedOrigins = ['http://localhost:5173', 'https://swayamkrush.com'];
 
 app.use(cors({
   origin: function (origin, callback) {

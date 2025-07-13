@@ -152,8 +152,8 @@ router.post('/verify-payment', async (req, res) => {
 })
 
 router.post('/resolveFirm', async (req, res) => {
-  const { userId, firmId } = req.body;
-  if (!userId || !firmId) return res.status(400).json({ message: "userId and firmId are required" });
+  const {  firmId } = req.body;
+  if (!firmId) return res.status(400).json({ message: "userId and firmId are required" });
 
   try {
     const firm = await Firm.findById(firmId);
@@ -170,8 +170,8 @@ router.post('/resolveFirm', async (req, res) => {
 });
 
 router.post('/undoResolveFirm', async (req, res) => {
-  const { userId, firmId } = req.body;
-  if (!userId || !firmId) return res.status(400).json({ message: "userId and firmId are required" });
+  const {  firmId } = req.body;
+  if ( !firmId) return res.status(400).json({ message: "userId and firmId are required" });
 
   try {
     const firm = await Firm.findById(firmId);

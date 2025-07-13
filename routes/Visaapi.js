@@ -40,8 +40,8 @@ router.post('/register-visa', upload.none(), async (req, res) => {
     if (userId) {
       const foundUser = await User.findById(userId);
       if (foundUser) {
-        foundUser.visa_assistance = foundUser.visa_assistance || [];
-        foundUser.visa_assistance.push(visa._id);
+        foundUser.visa_applications = foundUser.visa_applications || [];
+        foundUser.visa_applications.push(visa._id);
         await foundUser.save();
       } else {
         return res.status(404).json({ message: 'User not found' });
