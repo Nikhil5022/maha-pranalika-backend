@@ -7,7 +7,12 @@ connectDB();
 const port=5000;
 
 // Middleware
-const allowedOrigins = ['http://localhost:5173', 'https://swayamkrush.com'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://swayamkrush.com',
+  'https://maha-pranalika-backend.vercel.app'
+];
+
 
 app.use(cors({
   origin: function (origin, callback) {
