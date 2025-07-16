@@ -5,6 +5,8 @@ const storage = require('../cloudinaryStorage');
 const upload = multer({ storage });
 const user = require('../models/user');
 require('dotenv').config();
+const { deleteFileFromCloudinary } = require('../cloudinaryHelpers');
+
 
 const Firm = require('../models/Firm');
 const Razorpay = require('razorpay');
@@ -189,19 +191,44 @@ router.post('/undoResolveFirm', async (req, res) => {
 
 router.delete('/deleteFirm', async (req, res) => {
   const { userId, firmId } = req.body;
-  if (!userId || !firmId) return res.status(400).json({ message: "userId and firmId are required" });
+  if (!userId || !firmId)
+    return res.status(400).json({ message: "userId and firmId are required" });
 
   try {
-    const firm = await Firm.findByIdAndDelete(firmId);
+    // ✅ Find the firm first
+    const firm = await Firm.findById(firmId);
     if (!firm) return res.status(404).json({ message: "Firm not found" });
 
+    // ✅ Collect all firm file URLs from schema
+    const fileUrls = [
+      firm.documents?.panCard,
+      firm.documents?.aadhaarCard,
+      firm.documents?.photos,
+      firm.documents?.addressProofDoc,
+      firm.documents?.dsc,
+      firm.documents?.noc,
+      firm.declaration?.signature
+    ];
+
+    // ✅ Delete each file from Cloudinary
+    for (const url of fileUrls) {
+      if (url) await deleteFileFromCloudinary(url);
+    }
+
+    // ✅ Delete firm record from DB
+    await Firm.findByIdAndDelete(firmId);
+
+    // ✅ Remove firm reference from user
     const foundUser = await user.findById(userId);
     if (foundUser) {
-      foundUser.firm_registration = foundUser.firm_registration.filter(id => id.toString() !== firmId);
+      foundUser.firm_registration = foundUser.firm_registration.filter(
+        id => id.toString() !== firmId
+      );
       await foundUser.save();
     }
 
-    res.status(200).json({ message: "Firm deleted successfully" });
+    res.status(200).json({ message: "Firm and its files deleted successfully" });
+
   } catch (err) {
     console.error("Delete Firm Error:", err);
     res.status(500).json({ error: "Server error", details: err.message });
