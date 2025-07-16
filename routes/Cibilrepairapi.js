@@ -5,6 +5,8 @@ const storage = require('../cloudinaryStorage');
 const upload = multer({ storage });
 const user = require('../models/user');
 const CibilReapir = require('../models/CibilRepair')
+const { deleteFileFromCloudinary } = require('../cloudinaryHelpers');
+
 
 router.post('/register-cibil', upload.fields([
   { name: 'panCard' },
@@ -113,19 +115,42 @@ router.post('/undoResolveCibilRepair', async (req, res) => {
 
 router.delete('/deleteCibilRepair', async (req, res) => {
   const { userId, repairId } = req.body;
-  if (!userId || !repairId) return res.status(400).json({ message: "userId and repairId are required" });
+  if (!userId || !repairId)
+    return res.status(400).json({ message: "userId and repairId are required" });
 
   try {
-    const deletedEntry = await CibilReapir.findByIdAndDelete(repairId);
-    if (!deletedEntry) return res.status(404).json({ message: "CIBIL Repair entry not found" });
+    // ✅ Find the repair entry first
+    const repairEntry = await CibilReapir.findById(repairId);
+    if (!repairEntry)
+      return res.status(404).json({ message: "CIBIL Repair entry not found" });
 
+    // ✅ Collect all file URLs from documents
+    const fileUrls = [
+      repairEntry.documents?.panCard,
+      repairEntry.documents?.aadhaarCard,
+      repairEntry.documents?.cibilReport,
+      repairEntry.documents?.bankStatement,
+      repairEntry.documents?.salary
+    ];
+
+    // ✅ Delete each file from Cloudinary
+    for (const url of fileUrls) {
+      if (url) await deleteFileFromCloudinary(url);
+    }
+
+    // ✅ Delete the entry from DB
+    await CibilReapir.findByIdAndDelete(repairId);
+
+    // ✅ Remove from user’s cibil_score_restoration array
     const foundUser = await user.findById(userId);
     if (foundUser) {
-      foundUser.cibil_score_restoration = foundUser.cibil_score_restoration.filter(id => id.toString() !== repairId);
+      foundUser.cibil_score_restoration = foundUser.cibil_score_restoration.filter(
+        id => id.toString() !== repairId
+      );
       await foundUser.save();
     }
 
-    res.status(200).json({ message: "CIBIL Repair entry deleted successfully" });
+    res.status(200).json({ message: "CIBIL Repair entry & files deleted successfully" });
   } catch (err) {
     console.error("Delete CIBIL Repair Error:", err);
     res.status(500).json({ error: "Server error", details: err.message });

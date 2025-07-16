@@ -5,6 +5,7 @@ const storage = require("../cloudinaryStorage");
 const upload = multer({ storage });
 const user = require("../models/user");
 const Firm = require("../models/Firm");
+const mongoose= require('mongoose');
 router.get('/getUsers', async (req, res) => {
     try {
         const users = await user.find({ role: "user" });
@@ -21,6 +22,10 @@ router.get('/getUsers', async (req, res) => {
 router.get('/getUserById/:id', async (req, res) => {
   try {
     const userId = req.params.id;
+
+     if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
 
     const foundUser = await user.findById(userId)
       .populate("firm_registration")
