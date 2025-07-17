@@ -4,13 +4,13 @@ const connectDB = require('../db');
 
 const app = express();
 connectDB();
-const port=5000;
+const port = 5000;
 
 // Middleware
-const allowedOrigins = [
+const allowed = [
   'http://localhost:5173',
   'https://swayamkrush.com',
-  'https://maha-pranalika-backend.vercel.app'
+  'https://www.swayamkrush.com',    // ✅ also allow www version
 ];
 
 
@@ -36,7 +36,7 @@ app.use('/api/cibil', require('../routes/Cibiltrainingapi'));
 app.use('/api/cibil-repair', require('../routes/Cibilrepairapi'));
 app.use('/api/user', require('../routes/Users'));
 app.use('/api/msme', require('../routes/Msmeapi'));
-app.use('/api',require('../routes/Search'));
+app.use('/api', require('../routes/Search'));
 app.use('/api/visa', require('../routes/Visaapi'));
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
