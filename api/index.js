@@ -5,26 +5,12 @@ const connectDB = require('../db');
 const app = express();
 connectDB();
 const port = 5000;
-
-// Middleware
-const allowed = [
-  'http://localhost:5173',
-  'https://swayamkrush.com',
-  'https://www.swayamkrush.com',    // ✅ also allow www version
-];
-
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  origin: true,         // Reflects request origin (allows all)
+  credentials: true,    // If you’re using cookies/auth headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
