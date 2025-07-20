@@ -5,12 +5,21 @@ const connectDB = require('../db');
 const app = express();
 connectDB();
 const port = 5000;
-app.use(cors({
-  origin: true, // Reflects the exact request origin
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end(); // ✅ respond immediately for preflight
+  }
+
+  next();
+});
+
+app.use(cors());
+
 
 app.options('*', cors());
 
