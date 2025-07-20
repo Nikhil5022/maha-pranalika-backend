@@ -31,8 +31,8 @@ const firmSchema = new mongoose.Schema({
     aadhaarCard: { type: String, required: true, trim: true },
     photos: { type: String, required: true, trim: true },
     addressProofDoc: { type: String, required: true, trim: true },
-    dsc: { type: String, required: true, trim: true },
-    noc: { type: String, required: true, trim: true }
+    dsc: { type: String,  trim: true },
+    noc: { type: String, trim: true }
   },
 
   declaration: {
