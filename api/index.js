@@ -5,23 +5,12 @@ const connectDB = require('../db');
 const app = express();
 connectDB();
 const port = 5000;
-
 app.use(cors({
-  origin: '*',  // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: true,         // Reflects request origin (allows all)
+  credentials: true,    // If you’re using cookies/auth headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 
-// ✅ Explicit preflight response (only needed for Vercel)
-app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  return res.sendStatus(200);
-});
-
-
-app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
