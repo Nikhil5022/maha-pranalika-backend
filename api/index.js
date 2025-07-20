@@ -6,11 +6,13 @@ const app = express();
 connectDB();
 const port = 5000;
 app.use(cors({
-  origin: true,         // Reflects request origin (allows all)
-  credentials: true,    // If you’re using cookies/auth headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
+  origin: true, // Reflects the exact request origin
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
