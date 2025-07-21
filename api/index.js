@@ -1,31 +1,36 @@
 const express = require('express');
-const cors = require('cors');
 const connectDB = require('../db');
-
 const app = express();
 connectDB();
-const port = 5000;
-app.use(cors({
-  origin: true,         // Reflects request origin (allows all)
-  credentials: true,    // If you’re using cookies/auth headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
 
+const allowedOrigins = [
+  "https://swayamkrush.com",     // ✅ Your frontend domain
+  "https://www.swayamkrush.com",
+  "http://localhost:5173"        // ✅ Local dev
+];
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// CORS middleware for all routes
+// ✅ CORS middleware (before any routes)
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") return res.sendStatus(200);
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // ✅ IMPORTANT: Reply immediately for preflight
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   next();
 });
 
+// ✅ Body parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// ✅ Your routes
 app.use('/api/auth', require('../routes/auth'));
 app.use('/api/firm', require('../routes/Firmapi'));
 app.use('/api/cibil', require('../routes/Cibiltrainingapi'));
@@ -34,12 +39,9 @@ app.use('/api/user', require('../routes/Users'));
 app.use('/api/msme', require('../routes/Msmeapi'));
 app.use('/api', require('../routes/Search'));
 app.use('/api/visa', require('../routes/Visaapi'));
+
 app.get('/', (req, res) => {
   res.send('Welcome to Maha Pranalika Backend API');
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
 });
 
 module.exports = app;
