@@ -8,7 +8,11 @@ connectDB();
 const allowedOrigins = [
   "https://swayamkrush.com",
   "https://www.swayamkrush.com",
-  "http://localhost:5173" // for local dev
+  "http://localhost:5173",
+  "*://swayamkrush.com",
+  "*://www.swayamkrush.com",
+  "*://localhost:5173"
+
 ];
 
 // ✅ CORS middleware
